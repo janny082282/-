@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8f9f7">
+  <meta name="description" content="강의자료와 기출문제로 만드는 나만의 시험 문제은행. 기출 원문은 그대로, 정답은 고정하고 강의노트에서 근거를 확인합니다.">
+  <title>문제공방 — 강의노트로 만드는 나만의 시험</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="문제공방 홈"><span class="brand-mark">✳</span> 문제공방<span class="brand-dot">.</span></a>
+    <nav class="topnav"><a href="#how">어떻게 작동하나요?</a><span class="beta">BETA 0.1</span></nav>
+  </header>
+  <main>
+    <section class="hero container">
+      <div class="hero-copy">
+        <span class="eyebrow"><span class="eyebrow-dot"></span> 시험 준비, 이제 필요한 것만</span>
+        <h1>강의노트는 그대로.<br><em>문제는 시험처럼.</em></h1>
+        <p>PDF를 올리고 기출문제를 붙여넣으면, <strong>강의노트에 근거한</strong> 나만의 문제은행이 만들어져요. 기출 원문과 지정 정답은 그대로 지켜요.</p>
+        <div class="hero-tags"><span>✓ 기출 우선</span><span>✓ 정답 고정</span><span>✓ 출처 확인</span><span>✓ 오답 복습</span></div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="floating-note note-one"><span class="note-label">LECTURE 03</span><div class="fake-line wide"></div><div class="fake-line"></div><div class="fake-line short"></div><div class="highlight-strip"></div><div class="fake-line"></div></div>
+        <div class="floating-note note-two"><span class="note-label">PRACTICE TEST</span><span class="tiny-number">Q. 07</span><div class="note-question">경제·환경·사회적<br>성과를 고려하는 개념은?</div><div class="answer-chip">TBL <span>✓</span></div></div>
+        <div class="sparkle sp1">✳</div><div class="sparkle sp2">✦</div>
+      </div>
+    </section>
+
+    <section class="workspace container" id="create">
+      <div class="section-head"><div><span class="section-kicker">01 / CREATE</span><h2>문제은행 만들기</h2><p>자료와 시험 범위를 알려주면, 중요한 것부터 출제할게요.</p></div><button id="demoBtn" class="btn btn-ghost" type="button">샘플 문제 체험 <span aria-hidden="true">↗</span></button></div>
+      <div class="setup-grid">
+        <form id="generateForm" class="panel form-panel" novalidate>
+          <div class="field-header"><div class="step-number">1</div><div><h3>강의자료 업로드</h3><p>최대 6개 · PDF, PPTX, DOCX, TXT · 파일당 12MB</p></div></div>
+          <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="강의자료 파일 선택"><div class="upload-icon">↥</div><strong>파일을 끌어오거나 클릭해서 추가</strong><small>텍스트가 포함된 파일을 권장해요 · 스캔 PDF는 아직 지원하지 않아요</small><input type="file" id="fileInput" accept=".pdf,.pptx,.docx,.txt" multiple hidden></div>
+          <div id="fileList" class="file-list" aria-live="polite"></div>
+          <div class="rule"></div>
+          <div class="field-header"><div class="step-number">2</div><div><h3>기출문제 입력</h3><p>질문과 정답을 함께 적으면 원문 그대로 보존해요.</p></div></div>
+          <label class="sr-only" for="pastText">기출문제</label>
+          <textarea id="pastText" rows="5" placeholder="예시)&#10;TBL은 뭐의 약자인가? → 답: Triple Bottom Line&#10;재화 및 서비스의 역학관계를 파악하기 위한 방법은? → 답: 이해관계자 맵&#10;공정무역"></textarea>
+          <div class="input-hint">한 줄에 하나씩 · <code>질문 → 답: 정답</code> 형식은 자동으로 정답을 고정해요.</div>
+          <div class="rule"></div>
+          <div class="field-header"><div class="step-number">3</div><div><h3>반드시 출제할 개념</h3><p>정답으로 나와야 하는 용어를 적어주세요.</p></div></div>
+          <label class="sr-only" for="conceptsText">필수 정답 용어</label>
+          <textarea id="conceptsText" rows="4" placeholder="포터 가설&#10;유해물질저감기법&#10;환경경제효율성&#10;MFCA"></textarea>
+          <div class="input-hint">한 줄에 하나씩 · 이 단어를 정답으로 하는 문제를 만들어요.</div>
+          <div class="rule"></div>
+          <div class="field-header"><div class="step-number">4</div><div><h3>출제 방식 설정</h3><p>원하는 유형과 문제 수를 선택하세요.</p></div></div>
+          <div class="settings-row"><div><label for="questionCount">문제 수</label><span>기출이 더 많으면 모두 포함돼요.</span></div><select id="questionCount"><option value="10">10문제</option><option value="20" selected>20문제</option><option value="30">30문제</option><option value="40">40문제</option><option value="50">50문제</option></select></div>
+          <div class="settings-row"><div><label for="questionStyle">문제 유형</label><span>객관식은 보기까지 생성해요.</span></div><select id="questionStyle"><option value="mixed">단답형 + 빈칸형</option><option value="short">단답형만</option><option value="blank">빈칸형만</option><option value="choice">객관식만</option></select></div>
+          <label class="toggle-row"><span class="toggle-copy"><strong>다양한 문장으로 변형하기</strong><small>같은 개념을 다른 강의노트 표현으로 질문</small></span><input id="variants" type="checkbox" checked><span class="switch" aria-hidden="true"></span></label>
+          <button id="generateBtn" class="btn btn-primary btn-full" type="submit"><span class="btn-star">✳</span> AI 문제은행 생성하기 <span aria-hidden="true">→</span></button>
+          <div id="formStatus" class="form-status" role="status" aria-live="polite"></div>
+          <p class="privacy-note">🔒 업로드 파일과 기출은 서버에 저장하지 않아요. AI 생성 시 추출된 텍스트가 API로 전송되며, 생성 결과는 이 브라우저에서만 표시돼요.</p>
+        </form>
+        <aside class="sidebar">
+          <div class="aside-card how-card" id="how"><span class="aside-eyebrow">OUR PROMISE</span><h3>기출은 지키고,<br>강의노트로 검증해요.</h3><div class="promise-list"><div><span class="promise-icon">01</span><div><strong>기출 원문 그대로</strong><p>직접 적은 질문과 정답은 AI가 바꾸지 않아요.</p></div></div><div><span class="promise-icon">02</span><div><strong>정답 먼저 고정</strong><p>필수 개념을 지정하면 해당 용어가 정답이 되도록 요청해요.</p></div></div><div><span class="promise-icon">03</span><div><strong>근거 없는 문제는 표시</strong><p>강의자료 인용문과 출처를 대조하고 검토가 필요한 문제를 구분해요.</p></div></div><div><span class="promise-icon">04</span><div><strong>오답만 다시</strong><p>문제를 섞고, 틀린 개념만 골라 복습해요.</p></div></div></div></div>
+          <div class="aside-card tip-card"><span class="tip-symbol">✎</span><strong>이렇게 입력하면 좋아요</strong><p><b>기출:</b> 질문과 답을 같이 입력<br><b>필수 개념:</b> 정답 용어만 입력<br><b>강의자료:</b> 해당 개념이 설명된 파일</p><span class="tip-small">인용문 일치만으로 정답의 의미까지 100% 검증되는 것은 아니에요.</span></div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="quizSection" class="quiz-section container" hidden>
+      <div class="quiz-header"><div><span class="section-kicker">02 / PRACTICE</span><h2>나의 문제은행</h2><p id="quizSubtitle">문제를 풀고 정답을 확인해 보세요.</p></div><div class="quiz-actions"><button id="exportBtn" class="btn btn-ghost" type="button">↓ JSON 저장</button><button id="printBtn" class="btn btn-ghost" type="button">⎙ 인쇄</button></div></div>
+      <div id="warningBox" class="warning-box" hidden></div>
+      <div class="stats"><div><span>전체 문제</span><strong id="totalStat">0</strong></div><div><span>채점 완료</span><strong id="gradedStat">0</strong></div><div><span>정답</span><strong id="correctStat">0</strong></div><div><span>정답률</span><strong id="percentStat">—</strong></div></div>
+      <div class="quiz-toolbar"><div class="filter-tabs" role="group" aria-label="문제 필터"><button data-filter="all" class="active" type="button">전체</button><button data-filter="wrong" type="button">오답만</button><button data-filter="pending" type="button">미채점</button></div><div class="toolbar-right"><button id="shuffleBtn" class="btn btn-ghost btn-small" type="button">⤨ 순서 섞기</button><button id="showAllBtn" class="btn btn-ghost btn-small" type="button">정답 모두 보기</button></div></div>
+      <div id="questionList" class="question-list"></div>
+      <div class="quiz-bottom"><button id="gradeAllBtn" class="btn btn-primary" type="button">입력한 답 전체 채점</button><button id="clearAnswersBtn" class="btn btn-ghost" type="button">답안 초기화</button></div>
+      <div class="import-row"><span>이전에 저장한 문제은행이 있나요?</span><label class="import-label" for="importInput">JSON 불러오기 ↗</label><input type="file" id="importInput" accept="application/json,.json" hidden></div>
+    </section>
+  </main>
+  <footer class="footer container"><span class="brand footer-brand"><span class="brand-mark">✳</span> 문제공방<span class="brand-dot">.</span></span><p>강의자료에 충실한 문제를 만드는 공부 도구 · 베타 버전</p><span>© 2026 문제공방</span></footer>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
